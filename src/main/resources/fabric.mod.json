@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "givemehats",
+  "version": "${version}",
+
+  "name": "Give Me Hats!",
+  "description": "A hat mod for fabric",
+  "authors": [
+    "Acro"
+  ],
+  "contact": {
+    "homepage": "http://acro.rf.gd",
+    "sources": "https://github.com/JSJBDEV/GiveMeHats"
+  },
+
+  "license": "MIT",
+  "icon": "assets/givemehats/icon.jpg",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "gd.rf.acro.givemehats.GiveMeHats"
+    ]
+  },
+
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
