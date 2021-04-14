@@ -60,6 +60,10 @@ public class GiveMeHats implements ModInitializer {
 						.withEntry(ItemEntry.builder(GiveMeHats.LIL_TATER_HAT_ITEM).weight(Integer.parseInt(c.get("taterhat"))).build())
 						.withEntry(ItemEntry.builder(GiveMeHats.BUNNY_SPACE_HELMET).weight(Integer.parseInt(c.get("spacehelmet"))).build())
 						.withEntry(ItemEntry.builder(GiveMeHats.IRISH_HAT_ITEM).weight(Integer.parseInt(c.get("irishhat"))).build())
+						.withEntry(ItemEntry.builder(GiveMeHats.WITCH_HAT_ITEM).weight(Integer.parseInt(c.getOrDefault("witchhat","1"))).build())
+						.withEntry(ItemEntry.builder(GiveMeHats.WOLF_EARS_ITEM).weight(Integer.parseInt(c.getOrDefault("wolfears","1"))).build())
+						.withEntry(ItemEntry.builder(GiveMeHats.JOJO_HAT_ITEM).weight(Integer.parseInt(c.getOrDefault("jojohat","1"))).build())
+						.withEntry(ItemEntry.builder(GiveMeHats.IRISH_HAT_ITEM).weight(Integer.parseInt(c.getOrDefault("golembucket","1"))).build())
 						.withEntry(ItemEntry.builder(Items.AIR).weight(Integer.parseInt(c.get("air"))).build()).build();
 
 
@@ -90,6 +94,10 @@ public class GiveMeHats implements ModInitializer {
 	public static final LilTaterHatItem LIL_TATER_HAT_ITEM = new LilTaterHatItem(new Item.Settings().group(GiveMeHats.TAB));
 	public static final BunnySpaceHelmet BUNNY_SPACE_HELMET = new BunnySpaceHelmet(new Item.Settings().group(GiveMeHats.TAB));
 	public static final IrishHatItem IRISH_HAT_ITEM = new IrishHatItem(new Item.Settings().group(GiveMeHats.TAB));
+	public static final GolemBucketItem GOLEM_BUCKET_ITEM = new GolemBucketItem(new Item.Settings().group(GiveMeHats.TAB));
+	public static final JojoHatItem JOJO_HAT_ITEM = new JojoHatItem(new Item.Settings().group(GiveMeHats.TAB));
+	public static final WolfEarsItem WOLF_EARS_ITEM = new WolfEarsItem(new Item.Settings().group(GiveMeHats.TAB));
+	public static final WitchHatItem WITCH_HAT_ITEM = new WitchHatItem(new Item.Settings().group(GiveMeHats.TAB));
 	private void registerItems()
 	{
 		Registry.register(Registry.ITEM,new Identifier("givemehats","bowler_hat"),BOWLER_HAT_ITEM);
@@ -113,5 +121,9 @@ public class GiveMeHats implements ModInitializer {
 		Registry.register(Registry.ITEM,new Identifier("givemehats","tater_hat"),LIL_TATER_HAT_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("givemehats","bunny_space_helmet"),BUNNY_SPACE_HELMET);
 		Registry.register(Registry.ITEM,new Identifier("givemehats","irish_hat"),IRISH_HAT_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("givemehats","golem_bucket"),GOLEM_BUCKET_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("givemehats","jojo_hat"),JOJO_HAT_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("givemehats","wolf_ears"),WOLF_EARS_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("givemehats","witch_hat"),WITCH_HAT_ITEM);
 	}
 }

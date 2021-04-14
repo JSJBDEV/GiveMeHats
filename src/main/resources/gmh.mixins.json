@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "gd.rf.acro.givemehats.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AttackMixin"
+  ],
+  "client": [
+
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
