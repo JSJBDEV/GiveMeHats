@@ -19,7 +19,11 @@
     "item.givemehats.tater_hat": "Lil Tater",
     "item.givemehats.bunny_space_helmet": "Космічний шолом",
     "item.givemehats.irish_hat": "Шляпа лепрекона",
-    "item.givemehats.santa_hat": "Шапка Санти",
+    "item.givemehats.santa_hat": "Шапка Санти",,
+    "item.givemehats.golem_bucket": "Відро голема",
+    "item.givemehats.jojo_hat": "Шляпа Джотаро",
+    "item.givemehats.wolf_ears": "Вовчі вуха",
+    "item.givemehats.witch_hat": "Шляпа відьми",
     "itemGroup.givemehats.hats_tab": "Give Me Hats!",
 
     "text.bowler_hat":"Пасивний: Швидка ходьба..Біг",
@@ -42,6 +46,10 @@
     "text.striderhat": "Пасивний: Лавасьйон",
     "text.topesthat": "Пасивний: Самий чудернацький із всіх",
     "text.tophat": "Пасивний: вишуканість",
-    "text.woolrushat":"Пасивний: walruswalruswalrus"
+    "text.woolrushat":"Пасивний: walruswalruswalrus",
+    "text.golembucket": "При атаці: Чи ти зможеш підняти, бро?",
+    "text.jojohat": "При атаці: YARE YARE DAZE (WIP)",
+    "text.wolf_ears": "При атаці: Овечка у вовчій шкурі?",
+    "text.witch_hat": "При атаці: bubble bubble, toil and trouble"
 
 }

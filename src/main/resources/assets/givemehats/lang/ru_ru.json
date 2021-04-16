@@ -20,6 +20,10 @@
     "item.givemehats.bunny_space_helmet": "Космический шлем",
     "item.givemehats.irish_hat": "Шляпа лепрекона",
     "item.givemehats.santa_hat": "Шапка Санты",
+    "item.givemehats.golem_bucket": "Ведро голема",
+    "item.givemehats.jojo_hat": "Шляпа Джотаро",
+    "item.givemehats.wolf_ears": "Волчьи уши",
+    "item.givemehats.witch_hat": "Шляпа ведьмы",
     "itemGroup.givemehats.hats_tab": "Give Me Hats!",
 
     "text.bowler_hat":"Пассивный: Быстрая ходьба..Бег",
@@ -42,6 +46,10 @@
     "text.striderhat": "Пассивный: Лавасьен",
     "text.topesthat": "Пассивный: Самый причудливый из всех",
     "text.tophat": "Пассивный: изысканность",
-    "text.woolrushat":"Пассивный: walruswalruswalrus"
+    "text.woolrushat":"Пассивный: walruswalruswalrus",
+    "text.golembucket": "При аттаке: Сможешь ли ты поднять, бро?",
+    "text.jojohat": "При аттаке: YARE YARE DAZE (WIP)",
+    "text.wolf_ears": "При аттаке: Овца в волчьей шкуре?",
+    "text.witch_hat": "При аттаке: bubble bubble, toil and trouble"
 
 }
