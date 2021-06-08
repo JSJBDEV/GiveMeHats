@@ -1,21 +1,16 @@
 package gd.rf.acro.givemehats.mixin;
 
+import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import gd.rf.acro.givemehats.GiveMeHats;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.util.ScreenshotUtils;
-import net.minecraft.client.util.Window;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.tag.Tag;
@@ -38,9 +33,9 @@ public abstract class AttackMixin {
         {
             LivingEntity entity = ((LivingEntity)(Object) this);
             PlayerEntity player = (PlayerEntity) source.getAttacker();
-            Inventory component = TrinketsApi.getTrinketsInventory(player);
+            TrinketComponent component = TrinketsApi.getTrinketComponent(player).get();
 
-            if(component.containsAny(Collections.singleton(GiveMeHats.GOLEM_BUCKET_ITEM)))
+            if(component.isEquipped(GiveMeHats.GOLEM_BUCKET_ITEM))
             {
 
                 if(RandomUtils.nextInt(0,5)==0)
@@ -48,14 +43,14 @@ public abstract class AttackMixin {
                     entity.addVelocity(0,1,0);
                 }
             }
-            if(component.containsAny(Collections.singleton(GiveMeHats.JOJO_HAT_ITEM)))
+            if(component.isEquipped(GiveMeHats.JOJO_HAT_ITEM))
             {
 
                 entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,100,2));
-
+                entity.setInvulnerable(false);
 
             }
-            if(component.containsAny(Collections.singleton(GiveMeHats.WOLF_EARS_ITEM)))
+            if(component.isEquipped(GiveMeHats.WOLF_EARS_ITEM))
             {
                 if(entity.getType()== EntityType.SHEEP)
                 {
@@ -63,7 +58,7 @@ public abstract class AttackMixin {
                     sheepEntity.sheared(SoundCategory.PLAYERS);
                 }
             }
-            if(component.containsAny(Collections.singleton(GiveMeHats.WITCH_HAT_ITEM)))
+            if(component.isEquipped(GiveMeHats.WITCH_HAT_ITEM))
             {
                 if(RandomUtils.nextInt(0,5)==0)
                 {
@@ -85,5 +80,8 @@ public abstract class AttackMixin {
 
         }
     }
+
+
+
 
 }

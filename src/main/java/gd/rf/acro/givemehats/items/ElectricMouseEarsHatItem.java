@@ -1,28 +1,25 @@
 package gd.rf.acro.givemehats.items;
 
-import dev.emi.trinkets.api.SlotGroups;
-import dev.emi.trinkets.api.Slots;
-import dev.emi.trinkets.api.Trinket;
+import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketItem;
+import dev.emi.trinkets.api.client.TrinketRenderer;
 import gd.rf.acro.givemehats.GiveMeHats;
-import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Box;
@@ -31,14 +28,13 @@ import org.apache.commons.lang3.RandomUtils;
 
 import java.util.List;
 
-import static dev.emi.trinkets.api.TrinketItem.TRINKET_DISPENSER_BEHAVIOR;
 
-public class ElectricMouseEarsHatItem extends Item implements Trinket {
+public class ElectricMouseEarsHatItem extends TrinketItem implements TrinketRenderer {
 
 
     public ElectricMouseEarsHatItem(Settings settings) {
         super(settings);
-        DispenserBlock.registerBehavior(this,TRINKET_DISPENSER_BEHAVIOR);
+        
     }
 
     @Override
@@ -48,36 +44,31 @@ public class ElectricMouseEarsHatItem extends Item implements Trinket {
     }
 
 
-    @Override
-    public boolean canWearInSlot(String s, String s1) {
-        return s.equals(SlotGroups.HEAD) && s1.equals(Slots.MASK);
-    }
+    
 
     @Override
-    public void tick(PlayerEntity player, ItemStack stack) {
-        if(player.isSneaking() && player.world.isRaining())
+    public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
+        if(entity.isSneaking() && entity.world.isRaining())
         {
-            List<MobEntity> entities = player.getEntityWorld().getEntitiesByClass(MobEntity.class,new Box(player.getX()-15,player.getY()-15,player.getZ(),player.getX()+15,player.getY()+15,player.getZ()+15), LivingEntity::isAlive);
-            entities.forEach(entity ->
+            List<MobEntity> entities = entity.getEntityWorld().getEntitiesByClass(MobEntity.class,new Box(entity.getX()-15,entity.getY()-15,entity.getZ(),entity.getX()+15,entity.getY()+15,entity.getZ()+15), LivingEntity::isAlive);
+            entities.forEach(entityq ->
             {
-                if(RandomUtils.nextInt(0,100)==0 && entity instanceof Monster)
+                if(RandomUtils.nextInt(0,100)==0 && entityq instanceof Monster)
                 {
-                    LightningEntity lightningEntity = new LightningEntity(EntityType.LIGHTNING_BOLT,player.world);
-                    lightningEntity.teleport(entity.getX(),entity.getY(),entity.getZ());
-                    player.getEntityWorld().spawnEntity(lightningEntity);
+                    LightningEntity lightningEntity = new LightningEntity(EntityType.LIGHTNING_BOLT,entityq.world);
+                    lightningEntity.teleport(entityq.getX(),entityq.getY(),entityq.getZ());
+                    entityq.getEntityWorld().spawnEntity(lightningEntity);
                 }
             });
         }
     }
 
     @Override
-    public void render(String slot, MatrixStack matrixStack, VertexConsumerProvider vertexConsumer, int light, PlayerEntityModel<AbstractClientPlayerEntity> model, AbstractClientPlayerEntity player, float headYaw, float headPitch) {
+    public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-        ItemStack stack = new ItemStack(GiveMeHats.ELECTRIC_MOUSE_EARS_HAT_ITEM);
-        Trinket.translateToFace(matrixStack,model,player,headYaw,headPitch);
+        GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
         matrixStack.scale(-1f,-1f,1f);
         matrixStack.translate(0,0.7,0.3f);
-        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumer);
-
+        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
     }
 }

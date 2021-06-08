@@ -1,25 +1,26 @@
 package gd.rf.acro.givemehats;
 
-import dev.emi.trinkets.api.SlotGroups;
-import dev.emi.trinkets.api.Slots;
-import dev.emi.trinkets.api.TrinketSlots;
+import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import gd.rf.acro.givemehats.items.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTableRange;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class GiveMeHats implements ModInitializer {
@@ -33,8 +34,7 @@ public class GiveMeHats implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		
-		TrinketSlots.addSlot(SlotGroups.HEAD, Slots.MASK,new Identifier("trinkets", "textures/item/empty_trinket_slot_mask.png"));
+
 		registerItems();
 		ConfigUtils.checkConfigs();
 		Map<String,String> c = ConfigUtils.config;
@@ -125,5 +125,54 @@ public class GiveMeHats implements ModInitializer {
 		Registry.register(Registry.ITEM,new Identifier("givemehats","jojo_hat"),JOJO_HAT_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("givemehats","wolf_ears"),WOLF_EARS_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("givemehats","witch_hat"),WITCH_HAT_ITEM);
+
+		TrinketRendererRegistry.registerRenderer(BOWLER_HAT_ITEM,BOWLER_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(BUNNY_EARS_ITEM,BUNNY_EARS_ITEM);
+		TrinketRendererRegistry.registerRenderer(BUNNY_SPACE_HELMET,BUNNY_SPACE_HELMET);
+		TrinketRendererRegistry.registerRenderer(CAT_EARS_HAT_ITEM,CAT_EARS_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(COWBOY_HAT_ITEM,COWBOY_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(CROWN_ITEM,CROWN_ITEM);
+		TrinketRendererRegistry.registerRenderer(DEER_STALKER_HAT_ITEM,DEER_STALKER_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(ELECTRIC_MOUSE_EARS_HAT_ITEM,ELECTRIC_MOUSE_EARS_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(FEZ_HAT_ITEM,FEZ_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(FLOATING_HAT_ITEM,FLOATING_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(FOX_EARS_HAT_ITEM,FOX_EARS_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(GOLEM_BUCKET_ITEM,GOLEM_BUCKET_ITEM);
+		TrinketRendererRegistry.registerRenderer(IRISH_HAT_ITEM,IRISH_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(JOJO_HAT_ITEM,JOJO_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(LIL_TATER_HAT_ITEM,LIL_TATER_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(RUSSIAN_HAT_ITEM,RUSSIAN_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(SAILOR_HAT_ITEM,SAILOR_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(SANTAR_HAT_ITEM,SANTAR_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(SLIME_HAT_ITEM,SLIME_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(STRIDER_HAT_ITEM,STRIDER_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(TOPEST_HAT_ITEM,TOPEST_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(TOP_HAT_ITEM,TOP_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(WITCH_HAT_ITEM,WITCH_HAT_ITEM);
+		TrinketRendererRegistry.registerRenderer(WOLF_EARS_ITEM,WOLF_EARS_ITEM);
+		TrinketRendererRegistry.registerRenderer(WOOLRUS_HAT_ITEM,WOOLRUS_HAT_ITEM);
+
+	}
+
+	public static void translateToFace(MatrixStack matrices, EntityModel<? extends LivingEntity> model,
+									   LivingEntity entity, float headYaw, float headPitch) {
+
+		if (entity.isInSwimmingPose() || entity.isFallFlying()) {
+			if(model instanceof PlayerEntityModel)
+			{
+				PlayerEntityModel<AbstractClientPlayerEntity> ctx = (PlayerEntityModel<AbstractClientPlayerEntity>) model;
+				matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(ctx.head.roll));
+			}
+			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(headYaw));
+			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-45.0F));
+		} else {
+
+			if (entity.isInSneakingPose() && !model.riding) {
+				matrices.translate(0.0F, 0.25F, 0.0F);
+			}
+			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(headYaw));
+			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(headPitch));
+		}
+		matrices.translate(0.0F, -0.25F, -0.3F);
 	}
 }
