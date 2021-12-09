@@ -46,22 +46,7 @@ public class ElectricMouseEarsHatItem extends TrinketItem implements TrinketRend
 
     
 
-    @Override
-    public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.isSneaking() && entity.world.isRaining())
-        {
-            List<MobEntity> entities = entity.getEntityWorld().getEntitiesByClass(MobEntity.class,new Box(entity.getX()-15,entity.getY()-15,entity.getZ(),entity.getX()+15,entity.getY()+15,entity.getZ()+15), LivingEntity::isAlive);
-            entities.forEach(entityq ->
-            {
-                if(RandomUtils.nextInt(0,100)==0 && entityq instanceof Monster)
-                {
-                    LightningEntity lightningEntity = new LightningEntity(EntityType.LIGHTNING_BOLT,entityq.world);
-                    lightningEntity.teleport(entityq.getX(),entityq.getY(),entityq.getZ());
-                    entityq.getEntityWorld().spawnEntity(lightningEntity);
-                }
-            });
-        }
-    }
+
 
     @Override
     public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {

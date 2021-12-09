@@ -52,7 +52,7 @@ public class BunnyEarsHatItem extends TrinketItem implements TrinketRenderer {
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
         GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
         matrixStack.scale(-1f,-1f,1f);
-        matrixStack.translate(0,0.8,0.3f);
+        matrixStack.translate(0,0.7,0.3f);
         itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
     }
 }

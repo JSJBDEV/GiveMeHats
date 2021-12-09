@@ -40,7 +40,11 @@ public class CowboyHatItem extends TrinketItem implements TrinketRenderer {
 
     @Override
     public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.hasVehicle() && entity.getVehicle().getType()== EntityType.HORSE && (entity.getVehicle().isOnGround()))
+        if(entity.hasVehicle()
+                && entity.getVehicle().getType()== EntityType.HORSE
+                && (entity.getVehicle().isOnGround())
+                && entity.getVehicle().getVelocity().getX()<3
+                && entity.getVehicle().getVelocity().getZ()<3)
         {
             entity.getVehicle().setVelocity(entity.getVehicle().getVelocity().multiply(1.5,1.5,1.5));
         }

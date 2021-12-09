@@ -36,10 +36,8 @@ public class BunnySpaceHelmet extends TrinketItem implements TrinketRenderer {
 
     @Override
     public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.isInSwimmingPose())
-        {
-            entity.setAir(300);
-        }
+        entity.setAir(300);
+
     }
 
 

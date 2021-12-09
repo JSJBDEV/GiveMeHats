@@ -4,6 +4,7 @@ import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import gd.rf.acro.givemehats.GiveMeHats;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -49,6 +50,12 @@ public abstract class AttackMixin {
                 entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,100,2));
                 entity.setInvulnerable(false);
 
+            }
+            if(component.isEquipped(GiveMeHats.ELECTRIC_MOUSE_EARS_HAT_ITEM) && player.world.isRaining())
+            {
+                LightningEntity lightningEntity = new LightningEntity(EntityType.LIGHTNING_BOLT,entity.world);
+                lightningEntity.teleport(entity.getX(),entity.getY(),entity.getZ());
+                entity.getEntityWorld().spawnEntity(lightningEntity);
             }
             if(component.isEquipped(GiveMeHats.WOLF_EARS_ITEM))
             {

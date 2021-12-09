@@ -4,6 +4,7 @@ import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.client.TrinketRenderer;
 import gd.rf.acro.givemehats.GiveMeHats;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.OverlayTexture;
@@ -40,7 +41,11 @@ public class SailorHatItem extends TrinketItem implements TrinketRenderer {
 
     @Override
     public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.hasVehicle() && entity.getVehicle().getType()== EntityType.BOAT && entity.getVehicle().getVelocity().getX()<3 && entity.getVehicle().getVelocity().getZ()<3)
+        if(entity.hasVehicle()
+                && entity.getVehicle().getType()==EntityType.BOAT
+                && entity.world.getBlockState(entity.getBlockPos().down()).getBlock()== Blocks.WATER
+                && entity.getVehicle().getVelocity().getX()<3
+                && entity.getVehicle().getVelocity().getZ()<3)
         {
             entity.getVehicle().setVelocity(entity.getVehicle().getVelocity().multiply(1.1,0,1.1));
         }
