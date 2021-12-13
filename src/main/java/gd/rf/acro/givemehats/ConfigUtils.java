@@ -81,9 +81,38 @@ public class ConfigUtils {
         defaults.add("striderhat=1");
         defaults.add("taterhat=1");
         defaults.add("woolrushat=1");
+        defaults.add("witchhat=1");
+        defaults.add("jojohat=1");
+        defaults.add("wolfears=1");
+        defaults.add("golembucket=1");
         defaults.add("#this should probably not go lower than 10, it makes it so you not always guaranteed a hat");
         defaults.add("air=10");
-
+        defaults.add("#you can disable hats by changing these to anything apart from 1");
+        defaults.add("enable_bowlerhat=1");
+        defaults.add("enable_tophat=1");
+        defaults.add("enable_topesthat=1");
+        defaults.add("enable_bunnyears=1");
+        defaults.add("enable_bunnyspacehelmet=1");
+        defaults.add("enable_catears=1");
+        defaults.add("enable_cowboyhat=1");
+        defaults.add("enable_crown=1");
+        defaults.add("enable_deerstalkerhat=1");
+        defaults.add("enable_electricmouseears=1");
+        defaults.add("enable_fez=1");
+        defaults.add("enable_floatinghat=1");
+        defaults.add("enable_foxears=1");
+        defaults.add("enable_irishhat=1");
+        defaults.add("enable_russianhat=1");
+        defaults.add("enable_sailorhat=1");
+        defaults.add("enable_santahat=1");
+        defaults.add("enable_slimehat=1");
+        defaults.add("enable_striderhat=1");
+        defaults.add("enable_taterhat=1");
+        defaults.add("enable_woolrushat=1");
+        defaults.add("enable_witchhat=1");
+        defaults.add("enable_jojohat=1");
+        defaults.add("enable_wolfears=1");
+        defaults.add("enable_golembucket=1");
         return defaults;
     }
 

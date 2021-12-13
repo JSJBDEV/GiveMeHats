@@ -4,7 +4,6 @@ import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.client.TrinketRenderer;
 import gd.rf.acro.givemehats.GiveMeHats;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.OverlayTexture;
@@ -14,6 +13,9 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -21,10 +23,11 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class SantarHatItem extends TrinketItem implements TrinketRenderer {
+
+public class DwarvenHatItem extends TrinketItem implements TrinketRenderer {
 
 
-    public SantarHatItem(Settings settings) {
+    public DwarvenHatItem(Settings settings) {
         super(settings);
         
     }
@@ -32,7 +35,7 @@ public class SantarHatItem extends TrinketItem implements TrinketRenderer {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.santahat"));
+        tooltip.add(new TranslatableText("text.dwarven_hat"));
     }
 
 
@@ -40,17 +43,18 @@ public class SantarHatItem extends TrinketItem implements TrinketRenderer {
 
     @Override
     public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.getEntityWorld().getBlockState(entity.getBlockPos().down()).getBlock()== Blocks.WATER)
+        if(entity.getY()<20 && !entity.hasStatusEffect(StatusEffects.HASTE))
         {
-            entity.getEntityWorld().setBlockState(entity.getBlockPos().down(),Blocks.FROSTED_ICE.getDefaultState());
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE,200,2));
         }
+
     }
 
     @Override
     public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
         GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
-        matrixStack.scale(-1.1f,-1.1f,1.1f);
+        matrixStack.scale(-1f,-1f,1f);
         matrixStack.translate(0,0.7,0.3f);
         itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
     }

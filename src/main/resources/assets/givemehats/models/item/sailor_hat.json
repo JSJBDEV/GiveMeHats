@@ -102,7 +102,7 @@
 	"display": {
 		"thirdperson_lefthand": {
 			"rotation": [68, 0, 0],
-			"translation": [-6, 5, 26.25]
+			"translation": [-6, 5.5, 26.25]
 		},
 		"gui": {
 			"rotation": [45, 45, 0],
