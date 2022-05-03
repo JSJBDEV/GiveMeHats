@@ -1,61 +1,36 @@
 package gd.rf.acro.givemehats.items;
 
-import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketItem;
-import dev.emi.trinkets.api.client.TrinketRenderer;
-import gd.rf.acro.givemehats.GiveMeHats;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import top.theillusivec4.curios.api.SlotContext;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class CowboyHatItem extends TrinketItem implements TrinketRenderer {
+public class CowboyHatItem extends TrinketItem {
 
 
-    public CowboyHatItem(Settings settings) {
-        super(settings);
-        
+
+
+   @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(new TranslatableComponent("text.cowboy_hat"));
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.cowboy_hat"));
-    }
-
-
-    
-
-    @Override
-    public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.hasVehicle()
-                && entity.getVehicle().getType()== EntityType.HORSE
-                && (entity.getVehicle().isOnGround())
-                && entity.getVehicle().getVelocity().getX()<3
-                && entity.getVehicle().getVelocity().getZ()<3)
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        super.curioTick(slotContext, stack);
+        if(slotContext.entity().isPassenger() && slotContext.entity().getVehicle().getType()== EntityType.HORSE
+                && (slotContext.entity().getVehicle().isOnGround())
+                && slotContext.entity().getVehicle().getDeltaMovement().x<3
+                && slotContext.entity().getVehicle().getDeltaMovement().z<3)
         {
-            entity.getVehicle().setVelocity(entity.getVehicle().getVelocity().multiply(1.5,1.5,1.5));
+            slotContext.entity().getVehicle().setDeltaMovement(slotContext.entity().getVehicle().getDeltaMovement().multiply(1.3,1.3,1.3));
         }
-    }
-
-    @Override
-    public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-        GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
-        matrixStack.scale(-1f,-1f,1f);
-        matrixStack.translate(0,0.7,0.3f);
-        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
     }
 }

@@ -1,46 +1,24 @@
 package gd.rf.acro.givemehats.items;
 
-import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketItem;
-import dev.emi.trinkets.api.client.TrinketRenderer;
-import gd.rf.acro.givemehats.GiveMeHats;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
-import org.apache.commons.lang3.RandomUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class ElectricMouseEarsItem extends TrinketItem implements TrinketRenderer {
+public class ElectricMouseEarsItem extends TrinketItem {
 
 
-    public ElectricMouseEarsItem(Settings settings) {
-        super(settings);
-        
-    }
 
-    @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.emousehat"));
+
+   @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(new TranslatableComponent("text.emousehat"));
     }
 
 
@@ -48,12 +26,5 @@ public class ElectricMouseEarsItem extends TrinketItem implements TrinketRendere
 
 
 
-    @Override
-    public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-        GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
-        matrixStack.scale(-1f,-1f,1f);
-        matrixStack.translate(0,0.7,0.3f);
-        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
-    }
+
 }

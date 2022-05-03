@@ -1,66 +1,46 @@
 package gd.rf.acro.givemehats.items;
 
-import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketItem;
-import dev.emi.trinkets.api.client.TrinketRenderer;
-import gd.rf.acro.givemehats.GiveMeHats;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import top.theillusivec4.curios.api.SlotContext;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class CatEarsItem extends TrinketItem implements TrinketRenderer {
+public class CatEarsItem extends TrinketItem {
 
 
-    public CatEarsItem(Settings settings) {
-        super(settings);
-        
-    }
 
-    @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.cat_ears"));
+
+   @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(new TranslatableComponent("text.cat_ears"));
     }
 
 
     
 
+
+
     @Override
-    public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.isSneaking())
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        super.curioTick(slotContext, stack);
+        if(slotContext.entity().isShiftKeyDown())
         {
-            List<CreeperEntity> entities = entity.getEntityWorld().getEntitiesByClass(CreeperEntity.class,new Box(entity.getX()-15,entity.getY()-15,entity.getZ(),entity.getX()+15,entity.getY()+15,entity.getZ()+15), LivingEntity::isAlive);
+            List<Creeper> entities = slotContext.entity().getLevel().getEntitiesOfClass(Creeper.class,new AABB(slotContext.entity().getX()-15,slotContext.entity().getY()-15,slotContext.entity().getZ(),slotContext.entity().getX()+15,slotContext.entity().getY()+15,slotContext.entity().getZ()+15));
             entities.forEach(entityq ->
             {
-                entityq.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS,100,5));
-                entityq.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,100,1));
+                entityq.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,5));
+                entityq.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,100,1));
             });
         }
-
-    }
-
-    @Override
-    public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-        GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
-        matrixStack.scale(-1f,-1f,1f);
-        matrixStack.translate(0,0.7,0.3f);
-        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
     }
 }

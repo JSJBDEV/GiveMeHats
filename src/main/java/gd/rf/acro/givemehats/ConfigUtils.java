@@ -1,6 +1,6 @@
 package gd.rf.acro.givemehats;
 
-import net.fabricmc.loader.api.FabricLoader;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -17,7 +17,7 @@ public class ConfigUtils {
 
     public static Map<String,String> loadConfigs()
     {
-        File file = new File(FabricLoader.getInstance().getConfigDir().toString() + "/GiveMeHats/config.acfg");
+        File file = new File("./config/GiveMeHats/config.acfg");
         try {
             List<String> lines = FileUtils.readLines(file,"utf-8");
             lines.forEach(line->
@@ -37,7 +37,7 @@ public class ConfigUtils {
 
     public static void generateConfigs(List<String> input)
     {
-        File file = new File(FabricLoader.getInstance().getConfigDirectory().getPath() + "/GiveMeHats/config.acfg");
+        File file = new File("./config/GiveMeHats/config.acfg");
 
         try {
             FileUtils.writeLines(file,input);
@@ -48,7 +48,7 @@ public class ConfigUtils {
 
     public static Map<String,String> checkConfigs()
     {
-        if(new File(FabricLoader.getInstance().getConfigDirectory().getPath() + "/GiveMeHats/config.acfg").exists())
+        if(new File("./config/GiveMeHats/config.acfg").exists())
         {
             return loadConfigs();
         }

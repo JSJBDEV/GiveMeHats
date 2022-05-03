@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "gd.rf.acro.givemehats.mixin",
   "compatibilityLevel": "JAVA_16",
+  "refmap": "gmh.refmap.json",
   "mixins": [
     "AttackMixin",
     "LootMixin"

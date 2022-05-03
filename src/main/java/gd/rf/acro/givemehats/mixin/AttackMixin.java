@@ -1,89 +1,93 @@
 package gd.rf.acro.givemehats.mixin;
 
-import dev.emi.trinkets.api.TrinketComponent;
-import dev.emi.trinkets.api.TrinketsApi;
 import gd.rf.acro.givemehats.GiveMeHats;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.tag.Tag;
-import net.minecraft.text.LiteralText;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.RandomUtils;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Collections;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.util.ICuriosHelper;
 
 @Mixin(LivingEntity.class)
 public abstract class AttackMixin {
 
 
-    @Shadow public abstract void sendPickup(Entity item, int count);
 
-    @Inject(method = "damage", at = @At("TAIL"))
+    
+    
+
+    @Inject(method = "hurt", at = @At("TAIL"))
     private void damage(DamageSource source, float amount, CallbackInfoReturnable cir) {
-        if(source.getAttacker() instanceof ServerPlayerEntity)
+        if(source.getDirectEntity() instanceof ServerPlayer)
         {
             LivingEntity entity = ((LivingEntity)(Object) this);
-            PlayerEntity player = (PlayerEntity) source.getAttacker();
-            TrinketComponent component = TrinketsApi.getTrinketComponent(player).get();
+            Player player = (Player) source.getDirectEntity();
+            
+            ICuriosHelper component = CuriosApi.getCuriosHelper();
 
-            if(component.isEquipped(GiveMeHats.GOLEM_BUCKET_ITEM))
+            
+            if(component.findFirstCurio(player,GiveMeHats.GOLEM_BUCKET_ITEM.get()).isPresent())
             {
 
                 if(RandomUtils.nextInt(0,5)==0)
                 {
-                    entity.addVelocity(0,1,0);
+                    entity.setDeltaMovement(entity.getDeltaMovement().add(0,1,0));
                 }
             }
-            if(component.isEquipped(GiveMeHats.JOJO_HAT_ITEM))
+            if(component.findFirstCurio(player,GiveMeHats.JOJO_HAT_ITEM.get()).isPresent())
             {
 
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,100));
+
+                entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,100));
                 entity.setHealth(entity.getHealth()-amount);
 
 
             }
-            if(component.isEquipped(GiveMeHats.ELECTRIC_MOUSE_EARS_HAT_ITEM) && player.world.isRaining())
+            if(component.findFirstCurio(player,GiveMeHats.ELECTRIC_MOUSE_EARS_HAT_ITEM.get()).isPresent() && player.level.isRaining())
             {
-                LightningEntity lightningEntity = new LightningEntity(EntityType.LIGHTNING_BOLT,entity.world);
-                lightningEntity.teleport(entity.getX(),entity.getY(),entity.getZ());
-                entity.getEntityWorld().spawnEntity(lightningEntity);
+                LightningBolt lightningEntity = new LightningBolt(EntityType.LIGHTNING_BOLT,entity.level);
+                lightningEntity.teleportTo(entity.getX(),entity.getY(),entity.getZ());
+                entity.getLevel().addFreshEntity(lightningEntity);
             }
-            if(component.isEquipped(GiveMeHats.WOLF_EARS_ITEM))
+            if(component.findFirstCurio(player,GiveMeHats.WOLF_EARS_ITEM.get()).isPresent())
             {
                 if(entity.getType()== EntityType.SHEEP)
                 {
-                    SheepEntity sheepEntity = (SheepEntity) entity;
-                    sheepEntity.sheared(SoundCategory.PLAYERS);
+                    Sheep sheepEntity = (Sheep) entity;
+                    sheepEntity.shear(SoundSource.PLAYERS);
                 }
             }
-            if(component.isEquipped(GiveMeHats.HIPPIE_VIBES_ITEM))
+            if(component.findFirstCurio(player,GiveMeHats.HIPPIE_VIBES_ITEM.get()).isPresent())
             {
+                
                 if(entity.getType()== EntityType.SHEEP)
                 {
-                    SheepEntity sheepEntity = (SheepEntity) entity;
-                    sheepEntity.setCustomName(new LiteralText("jeb_"));
+                    Sheep sheepEntity = (Sheep) entity;
+                    sheepEntity.setCustomName(new TextComponent("jeb_"));
                 }
             }
-            if(component.isEquipped(GiveMeHats.HALO_ITEM))
+            if(component.findFirstCurio(player,GiveMeHats.HALO_ITEM.get()).isPresent())
             {
-                if(entity.getGroup().equals(EntityGroup.UNDEAD))
+                if(entity.getMobType().equals(MobType.UNDEAD))
                 {
 
-                    entity.damage(DamageSource.player(player),4);
+                    entity.hurt(DamageSource.playerAttack(player),4);
                 }
             }
-            if(component.isEquipped(GiveMeHats.WITCH_HAT_ITEM))
+            if(component.findFirstCurio(player,GiveMeHats.WITCH_HAT_ITEM.get()).isPresent())
             {
                 if(RandomUtils.nextInt(0,5)==0)
                 {
@@ -91,13 +95,13 @@ public abstract class AttackMixin {
                     switch (ff)
                     {
                         case 0:
-                            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS,1000,1));
+                            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,1000,1));
                             break;
                         case 1:
-                            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON,1000,1));
+                            entity.addEffect(new MobEffectInstance(MobEffects.POISON,1000,1));
                             break;
                         case 2:
-                            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE,1000,1));
+                            entity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,1000,1));
                             break;
                     }
                 }

@@ -1,78 +1,100 @@
 package gd.rf.acro.givemehats;
 
-import dev.emi.trinkets.api.client.TrinketRenderer;
-import dev.emi.trinkets.api.client.TrinketRendererRegistry;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import gd.rf.acro.givemehats.items.*;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.core.Registry;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+import org.lwjgl.system.CallbackI;
 import org.spongepowered.asm.mixin.Mixins;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotTypeMessage;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
+import top.theillusivec4.curios.api.client.ICurioRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.function.Supplier;
 
-public class GiveMeHats implements ModInitializer {
+@Mod.EventBusSubscriber
+@Mod("givemehats")
+public class GiveMeHats {
 
-	public static final ItemGroup TAB = FabricItemGroupBuilder.build(
-			new Identifier("givemehats", "hats_tab"),
-			() -> new ItemStack(GiveMeHats.BOWLER_HAT_ITEM));
-	@Override
-	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+
+	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,"givemehats");
+	public static final CreativeModeTab TAB = new CreativeModeTab("givemehats_tab") {
+		@Override
+		public ItemStack makeIcon() {
+			return new ItemStack(GiveMeHats.BOWLER_HAT_ITEM.get());
+		}
+	};
+	public GiveMeHats()
+	{
+
 		ConfigUtils.checkConfigs();
 		genHatsList();
-		registerItems();
 
+		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		MinecraftForge.EVENT_BUS.register(this);
 
-
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 		System.out.println("May you find fine hats!");
-
-
+		Mixins.addConfiguration("gmh.mixins.json");
 	}
-	public static final BowlerHatItem BOWLER_HAT_ITEM = new BowlerHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final BunnyEarsItem BUNNY_EARS_ITEM = new BunnyEarsItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final SantaHatItem SANTAR_HAT_ITEM = new SantaHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final SlimeHatItem SLIME_HAT_ITEM = new SlimeHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final CowboyHatItem COWBOY_HAT_ITEM = new CowboyHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final SailorHatItem SAILOR_HAT_ITEM = new SailorHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final FloatingHatItem FLOATING_HAT_ITEM = new FloatingHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final TopHatItem TOP_HAT_ITEM = new TopHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final TopestHatItem TOPEST_HAT_ITEM = new TopestHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final FezHatItem FEZ_HAT_ITEM = new FezHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final DeerStalkerHatItem DEER_STALKER_HAT_ITEM = new DeerStalkerHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final CatEarsItem CAT_EARS_HAT_ITEM = new CatEarsItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final FoxEarsItem FOX_EARS_HAT_ITEM = new FoxEarsItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final ElectricMouseEarsItem ELECTRIC_MOUSE_EARS_HAT_ITEM = new ElectricMouseEarsItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final CrownItem CROWN_ITEM = new CrownItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final RussianHatItem RUSSIAN_HAT_ITEM = new RussianHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final StriderHatItem STRIDER_HAT_ITEM = new StriderHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final WoolrusHatItem WOOLRUS_HAT_ITEM = new WoolrusHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final TaterHatItem LIL_TATER_HAT_ITEM = new TaterHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final BunnySpaceHelmet BUNNY_SPACE_HELMET = new BunnySpaceHelmet(new Item.Settings().group(GiveMeHats.TAB));
-	public static final IrishHatItem IRISH_HAT_ITEM = new IrishHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final GolemBucketItem GOLEM_BUCKET_ITEM = new GolemBucketItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final JojoHatItem JOJO_HAT_ITEM = new JojoHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final WolfEarsItem WOLF_EARS_ITEM = new WolfEarsItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final WitchHatItem WITCH_HAT_ITEM = new WitchHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final VikingHatItem VIKING_HAT_ITEM = new VikingHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final DwarvenHatItem DWARVEN_HAT_ITEM = new DwarvenHatItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final HippieVibesItem HIPPIE_VIBES_ITEM = new HippieVibesItem(new Item.Settings().group(GiveMeHats.TAB));
-	public static final HaloItem HALO_ITEM = new HaloItem(new Item.Settings().group(GiveMeHats.TAB));
+	private void enqueueIMC(final InterModEnqueueEvent event) {
+		InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("head").size(1).build());
+	}
 
-	public static List<Item> LOADED_HATS;
+	public static final RegistryObject<BowlerHatItem> BOWLER_HAT_ITEM = ITEMS.register("bowler_hat", BowlerHatItem::new);
+	public static final RegistryObject<BunnyEarsItem> BUNNY_EARS_ITEM = ITEMS.register("bunny_ears", BunnyEarsItem::new);
+	public static final RegistryObject<SantaHatItem> SANTAR_HAT_ITEM = ITEMS.register("santa_hat", SantaHatItem::new);
+	public static final RegistryObject<SlimeHatItem> SLIME_HAT_ITEM = ITEMS.register("slime_hat", SlimeHatItem::new);
+	public static final RegistryObject<CowboyHatItem> COWBOY_HAT_ITEM = ITEMS.register("cowboy_hat", CowboyHatItem::new);
+	public static final RegistryObject<SailorHatItem> SAILOR_HAT_ITEM = ITEMS.register("sailor_hat", SailorHatItem::new);
+	public static final RegistryObject<FloatingHatItem> FLOATING_HAT_ITEM = ITEMS.register("floating_hat", FloatingHatItem::new);
+	public static final RegistryObject<TopHatItem> TOP_HAT_ITEM = ITEMS.register("top_hat", TopHatItem::new);
+	public static final RegistryObject<TopestHatItem> TOPEST_HAT_ITEM = ITEMS.register("topest_hat", TopestHatItem::new);
+	public static final RegistryObject<FezHatItem> FEZ_HAT_ITEM = ITEMS.register("fez_hat", FezHatItem::new);
+	public static final RegistryObject<DeerStalkerHatItem> DEER_STALKER_HAT_ITEM = ITEMS.register("deer_stalker_hat", DeerStalkerHatItem::new);
+	public static final RegistryObject<CatEarsItem> CAT_EARS_HAT_ITEM = ITEMS.register("cat_ears", CatEarsItem::new);
+	public static final RegistryObject<FoxEarsItem> FOX_EARS_HAT_ITEM = ITEMS.register("fox_ears", FoxEarsItem::new);
+	public static final RegistryObject<ElectricMouseEarsItem> ELECTRIC_MOUSE_EARS_HAT_ITEM = ITEMS.register("electric_mouse_ears", ElectricMouseEarsItem::new);
+	public static final RegistryObject<CrownItem> CROWN_ITEM = ITEMS.register("crown", CrownItem::new);
+	public static final RegistryObject<RussianHatItem> RUSSIAN_HAT_ITEM = ITEMS.register("russian_hat", RussianHatItem::new);
+	public static final RegistryObject<StriderHatItem> STRIDER_HAT_ITEM = ITEMS.register("strider_hat", StriderHatItem::new);
+	public static final RegistryObject<WoolrusHatItem> WOOLRUS_HAT_ITEM = ITEMS.register("woolrus_hat", WoolrusHatItem::new);
+	public static final RegistryObject<TaterHatItem> LIL_TATER_HAT_ITEM = ITEMS.register("tater_hat", TaterHatItem::new);
+	public static final RegistryObject<BunnySpaceHelmet> BUNNY_SPACE_HELMET = ITEMS.register("bunny_space_helmet", BunnySpaceHelmet::new);
+	public static final RegistryObject<IrishHatItem> IRISH_HAT_ITEM = ITEMS.register("irish_hat", IrishHatItem::new);
+	public static final RegistryObject<GolemBucketItem> GOLEM_BUCKET_ITEM = ITEMS.register("golem_bucket", GolemBucketItem::new);
+	public static final RegistryObject<JojoHatItem> JOJO_HAT_ITEM = ITEMS.register("jojo_hat", JojoHatItem::new);
+	public static final RegistryObject<WolfEarsItem> WOLF_EARS_ITEM = ITEMS.register("wolf_ears", WolfEarsItem::new);
+	public static final RegistryObject<WitchHatItem> WITCH_HAT_ITEM = ITEMS.register("witch_hat", WitchHatItem::new);
+	public static final RegistryObject<VikingHatItem> VIKING_HAT_ITEM = ITEMS.register("viking_hat", VikingHatItem::new);
+	public static final RegistryObject<DwarvenHatItem> DWARVEN_HAT_ITEM = ITEMS.register("dwarven_hat", DwarvenHatItem::new);
+	public static final RegistryObject<HippieVibesItem> HIPPIE_VIBES_ITEM = ITEMS.register("hippie_vibes", HippieVibesItem::new);
+	public static final RegistryObject<HaloItem> HALO_ITEM = ITEMS.register("halo", HaloItem::new);
+
+	public static List<RegistryObject> LOADED_HATS;
 	public static void genHatsList()
 	{
 		LOADED_HATS = new ArrayList<>();
@@ -144,36 +166,37 @@ public class GiveMeHats implements ModInitializer {
 		return value.replaceAll(regex, replacement).toLowerCase();
 	}
 
-	private void registerItems()
+
+
+	private void clientSetup(final FMLClientSetupEvent clientSetupEvent)
 	{
-
-		for(Item hat: LOADED_HATS)
+		for(RegistryObject hat: LOADED_HATS)
 		{
-			Registry.register(Registry.ITEM,new Identifier("givemehats",cc2uc(hat.getClass().getSimpleName().replace("Item",""))),hat);
-			TrinketRendererRegistry.registerRenderer(hat, (TrinketRenderer) hat);
-
+			CuriosRendererRegistry.register((Item) hat.get(), (Supplier<ICurioRenderer>) hat.get());
 		}
 
 	}
 
-	public static void translateToFace(MatrixStack matrices, EntityModel<? extends LivingEntity> model,
+	public static void translateToFace(PoseStack matrices, EntityModel<? extends LivingEntity> model,
 									   LivingEntity entity, float headYaw, float headPitch) {
 
-		if (entity.isInSwimmingPose() || entity.isFallFlying()) {
-			if(model instanceof PlayerEntityModel)
+		if (entity.isVisuallySwimming() || entity.isFallFlying()) {
+			if(model instanceof PlayerModel)
 			{
-				PlayerEntityModel<AbstractClientPlayerEntity> ctx = (PlayerEntityModel<AbstractClientPlayerEntity>) model;
-				matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(ctx.head.roll));
+				PlayerModel ctx = (PlayerModel) model;
+
+				matrices.mulPose(Vector3f.ZP.rotationDegrees(ctx.head.yRot));
 			}
-			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(headYaw));
-			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-45.0F));
+
+
+			matrices.mulPose(Vector3f.XP.rotationDegrees(-45.0F));
 		} else {
 
-			if (entity.isInSneakingPose() && !model.riding) {
+			if (entity.isShiftKeyDown() && !model.riding) {
 				matrices.translate(0.0F, 0.25F, 0.0F);
 			}
-			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(headYaw));
-			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(headPitch));
+			matrices.mulPose(Vector3f.YP.rotationDegrees(headYaw));
+			matrices.mulPose(Vector3f.XP.rotationDegrees(headPitch));
 		}
 		matrices.translate(0.0F, -0.25F, -0.3F);
 	}
