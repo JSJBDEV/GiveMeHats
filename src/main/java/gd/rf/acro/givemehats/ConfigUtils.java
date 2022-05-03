@@ -59,34 +59,8 @@ public class ConfigUtils {
     private static List<String> makeDefaults()
     {
         List<String> defaults = new ArrayList<>();
-        defaults.add("#to disable a hat set its weight to 0");
-        defaults.add("bowlerhat=1");
-        defaults.add("tophat=1");
-        defaults.add("topesthat=1");
-        defaults.add("bunnyears=1");
-        defaults.add("spacehelmet=1");
-        defaults.add("catears=1");
-        defaults.add("cowboyhat=1");
-        defaults.add("crown=1");
-        defaults.add("deerstalkerhat=1");
-        defaults.add("electricmouseears=1");
-        defaults.add("fez=1");
-        defaults.add("floatinghat=1");
-        defaults.add("foxears=1");
-        defaults.add("irishhat=1");
-        defaults.add("russianhat=1");
-        defaults.add("sailorhat=1");
-        defaults.add("santahat=1");
-        defaults.add("slimehat=1");
-        defaults.add("striderhat=1");
-        defaults.add("taterhat=1");
-        defaults.add("woolrushat=1");
-        defaults.add("witchhat=1");
-        defaults.add("jojohat=1");
-        defaults.add("wolfears=1");
-        defaults.add("golembucket=1");
-        defaults.add("#this should probably not go lower than 10, it makes it so you not always guaranteed a hat");
-        defaults.add("air=10");
+
+
         defaults.add("#you can disable hats by changing these to anything apart from 1");
         defaults.add("enable_bowlerhat=1");
         defaults.add("enable_tophat=1");
@@ -113,6 +87,14 @@ public class ConfigUtils {
         defaults.add("enable_jojohat=1");
         defaults.add("enable_wolfears=1");
         defaults.add("enable_golembucket=1");
+
+        defaults.add("##Luck settings##");
+        defaults.add("#in a given lootable inventory, the max amount of hats possible to spawn in it");
+        defaults.add("#defaults to 3, minimum is 0");
+        defaults.add("max_hats_per_chest=3");
+        defaults.add("#the chance that for each loot roll (see max_hats_per_chest) a hat WON'T spawn");
+        defaults.add("#defaults to 3, minimum is 1, 1 guarantees a hat per roll");
+        defaults.add("no_hat_per_roll=3");
         return defaults;
     }
 

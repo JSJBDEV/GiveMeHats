@@ -3,9 +3,7 @@ package gd.rf.acro.givemehats.mixin;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import gd.rf.acro.givemehats.GiveMeHats;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -15,6 +13,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.tag.Tag;
+import net.minecraft.text.LiteralText;
 import org.apache.commons.lang3.RandomUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,7 +25,9 @@ import java.util.Collections;
 
 @Mixin(LivingEntity.class)
 public abstract class AttackMixin {
-    @Shadow protected abstract void swimUpward(Tag<Fluid> fluid);
+
+
+    @Shadow public abstract void sendPickup(Entity item, int count);
 
     @Inject(method = "damage", at = @At("TAIL"))
     private void damage(DamageSource source, float amount, CallbackInfoReturnable cir) {
@@ -47,8 +48,9 @@ public abstract class AttackMixin {
             if(component.isEquipped(GiveMeHats.JOJO_HAT_ITEM))
             {
 
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,100,2));
-                entity.setInvulnerable(false);
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,100));
+                entity.setHealth(entity.getHealth()-amount);
+
 
             }
             if(component.isEquipped(GiveMeHats.ELECTRIC_MOUSE_EARS_HAT_ITEM) && player.world.isRaining())
@@ -63,6 +65,22 @@ public abstract class AttackMixin {
                 {
                     SheepEntity sheepEntity = (SheepEntity) entity;
                     sheepEntity.sheared(SoundCategory.PLAYERS);
+                }
+            }
+            if(component.isEquipped(GiveMeHats.HIPPIE_VIBES_ITEM))
+            {
+                if(entity.getType()== EntityType.SHEEP)
+                {
+                    SheepEntity sheepEntity = (SheepEntity) entity;
+                    sheepEntity.setCustomName(new LiteralText("jeb_"));
+                }
+            }
+            if(component.isEquipped(GiveMeHats.HALO_ITEM))
+            {
+                if(entity.getGroup().equals(EntityGroup.UNDEAD))
+                {
+
+                    entity.damage(DamageSource.player(player),4);
                 }
             }
             if(component.isEquipped(GiveMeHats.WITCH_HAT_ITEM))

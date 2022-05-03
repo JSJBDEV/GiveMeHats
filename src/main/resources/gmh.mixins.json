@@ -4,10 +4,10 @@
   "package": "gd.rf.acro.givemehats.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "AttackMixin"
+    "AttackMixin",
+    "LootMixin"
   ],
   "client": [
-
   ],
   "injectors": {
     "defaultRequire": 1

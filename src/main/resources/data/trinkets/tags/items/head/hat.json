@@ -11,7 +11,7 @@
     "givemehats:top_hat",
     "givemehats:topest_hat",
     "givemehats:fez_hat",
-    "givemehats:deerstalker_hat",
+    "givemehats:deer_stalker_hat",
     "givemehats:cat_ears",
     "givemehats:fox_ears",
     "givemehats:electric_mouse_ears",
@@ -27,6 +27,8 @@
     "givemehats:wolf_ears",
     "givemehats:witch_hat",
     "givemehats:viking_hat",
-    "givemehats:dwarven_hat"
+    "givemehats:dwarven_hat",
+    "givemehats:hippie_vibes",
+    "givemehats:halo"
   ]
 }

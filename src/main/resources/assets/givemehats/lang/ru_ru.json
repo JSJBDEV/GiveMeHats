@@ -7,7 +7,7 @@
     "item.givemehats.bunny_ears": "Кроличьи уши",
     "item.givemehats.floating_hat": "Шляпа болейщика",
     "item.givemehats.fez_hat": "Феска",
-    "item.givemehats.deerstalker_hat": "Шляпа охотника",
+    "item.givemehats.deer_stalker_hat": "Шляпа охотника",
     "item.givemehats.cat_ears": "Кошачьи уши",
     "item.givemehats.fox_ears": "Лисьи уши",
     "item.givemehats.electric_mouse_ears": "Уши 'Электрическая мышь'",
@@ -20,12 +20,6 @@
     "item.givemehats.bunny_space_helmet": "Космический шлем",
     "item.givemehats.irish_hat": "Шляпа лепрекона",
     "item.givemehats.santa_hat": "Шапка Санты",
-    "item.givemehats.golem_bucket": "Ведро голема",
-    "item.givemehats.jojo_hat": "Шляпа Джотаро",
-    "item.givemehats.wolf_ears": "Волчьи уши",
-    "item.givemehats.witch_hat": "Шляпа ведьмы",
-    "item.givemehats.viking_hat": "Шлем викингов",
-    "item.givemehats.dwarven_hat": "Шлем дворфов",
     "itemGroup.givemehats.hats_tab": "Give Me Hats!",
 
     "text.bowler_hat":"Пассивный: Быстрая ходьба..Бег",
@@ -48,12 +42,6 @@
     "text.striderhat": "Пассивный: Лавасьен",
     "text.topesthat": "Пассивный: Самый причудливый из всех",
     "text.tophat": "Пассивный: изысканность",
-    "text.woolrushat":"Пассивный: walruswalruswalrus",
-    "text.golembucket": "При аттаке: Сможешь ли ты поднять, бро?",
-    "text.jojohat": "При аттаке: YARE YARE DAZE (WIP)",
-    "text.wolf_ears": "При аттаке: Овца в волчьей шкуре?",
-    "text.witch_hat": "При аттаке: бульк бульк, труд и неприятности",
-    "text.viking_hat": "Пассивный: Упорство викингов",
-    "text.dwarven_hat": "Пассивный: Добыча в глубине"
+    "text.woolrushat":"Пассивный: walruswalruswalrus"
 
 }
