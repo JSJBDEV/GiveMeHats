@@ -50,7 +50,13 @@ public abstract class LootMixin extends LockableContainerBlockEntity {
     {
         if (this.lootTableId != null && this.world.getServer() != null)
         {
-            Random random = new Random(this.lootTableSeed);
+            Random random;
+            if (player == null)
+            {
+                random = new Random(this.lootTableSeed);
+            } else {
+                random = player.getRandom();
+            }
             for (int i = 0; i < Integer.parseInt(ConfigUtils.config.getOrDefault("max_hats_per_chest","3")); i++) {
                 if(random.nextInt(Integer.parseInt(ConfigUtils.config.getOrDefault("no_hat_per_roll","3")))==0)
                 {
