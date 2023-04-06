@@ -13,6 +13,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameters;
 import org.apache.commons.lang3.RandomUtils;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,6 +38,8 @@ public abstract class LootMixin extends LockableContainerBlockEntity {
 
     @Shadow protected abstract DefaultedList<ItemStack> getInvStackList();
 
+    @Shadow protected long lootTableSeed;
+
     protected LootMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
     }
@@ -45,7 +50,7 @@ public abstract class LootMixin extends LockableContainerBlockEntity {
     {
         if (this.lootTableId != null && this.world.getServer() != null)
         {
-            Random random = player.getRandom();
+			Random random = new Random(this.lootTableSeed);
             for (int i = 0; i < Integer.parseInt(ConfigUtils.config.getOrDefault("max_hats_per_chest","3")); i++) {
                 if(random.nextInt(Integer.parseInt(ConfigUtils.config.getOrDefault("no_hat_per_roll","3")))==0)
                 {
