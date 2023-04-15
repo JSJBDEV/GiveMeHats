@@ -37,15 +37,18 @@ public abstract class LootMixin extends LockableContainerBlockEntity {
 
     @Shadow protected long lootTableSeed;
 
+    private final boolean isChest;
+
     protected LootMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
+        this.isChest = blockEntityType == BlockEntityType.CHEST;
     }
 
 
     @Inject(method = "checkLootInteraction", at = @At("HEAD"))
     private void loot(PlayerEntity player, CallbackInfo ci)
     {
-        if (this.lootTableId != null && this.world.getServer() != null)
+        if (this.isChest && this.lootTableId != null && this.world.getServer() != null)
         {
             Random random;
             if (player == null)
