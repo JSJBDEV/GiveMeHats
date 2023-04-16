@@ -149,7 +149,7 @@ public class GiveMeHats implements ModInitializer {
 
 		for(Item hat: LOADED_HATS)
 		{
-			Registry.register(Registry.ITEM,new Identifier("givemehats",cc2uc(hat.getClass().getSimpleName().replace("Item",""))),hat);
+			Registry.register(Registry.ITEM, new Identifier("givemehats",cc2uc(hat.getClass().getSimpleName().replace("Item",""))), hat);
 			TrinketRendererRegistry.registerRenderer(hat, (TrinketRenderer) hat);
 
 		}
