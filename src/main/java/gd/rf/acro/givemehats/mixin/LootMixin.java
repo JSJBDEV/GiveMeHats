@@ -35,21 +35,32 @@ public abstract class LootMixin extends LockableContainerBlockEntity {
 
     @Shadow protected abstract DefaultedList<ItemStack> getInvStackList();
 
+    @Shadow protected long lootTableSeed;
+
+    private final boolean isChest;
+
     protected LootMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
+        this.isChest = blockEntityType == BlockEntityType.CHEST;
     }
 
 
     @Inject(method = "checkLootInteraction", at = @At("HEAD"))
     private void loot(PlayerEntity player, CallbackInfo ci)
     {
-        if (this.lootTableId != null && this.world.getServer() != null)
+        if (this.isChest && this.lootTableId != null && this.world.getServer() != null)
         {
-            Random random = player.getRandom();
+            Random random;
+            if (player == null)
+            {
+                Random random = Random.create(this.lootTableSeed);
+            } else {
+                random = player.getRandom();
+            }
             for (int i = 0; i < Integer.parseInt(ConfigUtils.config.getOrDefault("max_hats_per_chest","3")); i++) {
                 if(random.nextInt(Integer.parseInt(ConfigUtils.config.getOrDefault("no_hat_per_roll","3")))==0)
                 {
-                    this.getInvStackList().set(RandomUtils.nextInt(0,27),new ItemStack(GiveMeHats.LOADED_HATS.get(random.nextInt(GiveMeHats.LOADED_HATS.size()))));
+                    this.getInvStackList().set(RandomUtils.nextInt(0,this.size()),new ItemStack(GiveMeHats.LOADED_HATS.get(random.nextInt(GiveMeHats.LOADED_HATS.size()))));
                 }
             }
 
