@@ -16,7 +16,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -35,7 +35,7 @@ public class FoxEarsHatItem extends TrinketItem implements TrinketRenderer {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.foxears"));
+       tooltip.add(Text.translatable("text.foxears"));
     }
 
 
@@ -59,6 +59,6 @@ public class FoxEarsHatItem extends TrinketItem implements TrinketRenderer {
         GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
         matrixStack.scale(-1f,-1f,1f);
         matrixStack.translate(0,0.7,0.3f);
-        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
+        itemRenderer.renderItem(entity,stack,ModelTransformationMode.FIXED,false,matrixStack,vertexConsumers,entity.getWorld(),light,OverlayTexture.DEFAULT_UV,0);
     }
 }

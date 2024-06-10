@@ -17,7 +17,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class SailorHatItem extends TrinketItem implements TrinketRenderer {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.sailorhat"));
+       tooltip.add(Text.translatable("text.sailorhat"));
     }
 
 
@@ -43,7 +43,7 @@ public class SailorHatItem extends TrinketItem implements TrinketRenderer {
     public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
         if(entity.hasVehicle()
                 && entity.getVehicle().getType()==EntityType.BOAT
-                && entity.world.getBlockState(entity.getBlockPos().down()).getBlock()== Blocks.WATER
+                && entity.getWorld().getBlockState(entity.getBlockPos().down()).getBlock()== Blocks.WATER
                 && entity.getVehicle().getVelocity().getX()<3
                 && entity.getVehicle().getVelocity().getZ()<3)
         {
@@ -57,6 +57,6 @@ public class SailorHatItem extends TrinketItem implements TrinketRenderer {
         GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
         matrixStack.scale(-1f,-1f,1f);
         matrixStack.translate(0,0.7,0.3f);
-        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
+        itemRenderer.renderItem(entity,stack,ModelTransformationMode.FIXED,false,matrixStack,vertexConsumers,entity.getWorld(),light,OverlayTexture.DEFAULT_UV,0);
     }
 }

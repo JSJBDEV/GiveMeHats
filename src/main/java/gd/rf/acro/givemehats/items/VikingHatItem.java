@@ -18,7 +18,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class VikingHatItem extends TrinketItem implements TrinketRenderer {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.viking_hat"));
+       tooltip.add(Text.translatable("text.viking_hat"));
     }
 
 
@@ -43,7 +43,7 @@ public class VikingHatItem extends TrinketItem implements TrinketRenderer {
 
     @Override
     public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        if(entity.world.isRaining() && !entity.hasStatusEffect(StatusEffects.STRENGTH))
+        if(entity.getWorld().isRaining() && !entity.hasStatusEffect(StatusEffects.STRENGTH))
         {
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH,200));
         }
@@ -59,6 +59,6 @@ public class VikingHatItem extends TrinketItem implements TrinketRenderer {
         GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
         matrixStack.scale(-1f,-1f,1f);
         matrixStack.translate(0,0.7,0.3f);
-        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
+        itemRenderer.renderItem(entity,stack,ModelTransformationMode.FIXED,false,matrixStack,vertexConsumers,entity.getWorld(),light,OverlayTexture.DEFAULT_UV,0);
     }
 }
