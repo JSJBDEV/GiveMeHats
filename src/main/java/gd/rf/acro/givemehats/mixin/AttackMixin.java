@@ -5,29 +5,35 @@ import dev.emi.trinkets.api.TrinketsApi;
 import gd.rf.acro.givemehats.GiveMeHats;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.tag.Tag;
-import net.minecraft.text.LiteralText;
+
+import net.minecraft.text.Text;
 import org.apache.commons.lang3.RandomUtils;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Collections;
-
 @Mixin(LivingEntity.class)
 public abstract class AttackMixin {
 
 
     @Shadow public abstract void sendPickup(Entity item, int count);
+
+    @Shadow @Nullable public abstract LivingEntity getAttacker();
+
+    @Shadow public abstract void enterCombat();
 
     @Inject(method = "damage", at = @At("TAIL"))
     private void damage(DamageSource source, float amount, CallbackInfoReturnable cir) {
@@ -36,8 +42,11 @@ public abstract class AttackMixin {
             LivingEntity entity = ((LivingEntity)(Object) this);
             PlayerEntity player = (PlayerEntity) source.getAttacker();
             TrinketComponent component = TrinketsApi.getTrinketComponent(player).get();
+            component.getAllEquipped();
 
-            if(component.isEquipped(GiveMeHats.GOLEM_BUCKET_ITEM))
+
+
+            if(component.isEquipped(a->a.isOf(GiveMeHats.GOLEM_BUCKET_ITEM)))
             {
 
                 if(RandomUtils.nextInt(0,5)==0)
@@ -45,7 +54,7 @@ public abstract class AttackMixin {
                     entity.addVelocity(0,1,0);
                 }
             }
-            if(component.isEquipped(GiveMeHats.JOJO_HAT_ITEM))
+            if(component.isEquipped(a->a.isOf(GiveMeHats.JOJO_HAT_ITEM)))
             {
 
                 entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,100));
@@ -53,13 +62,13 @@ public abstract class AttackMixin {
 
 
             }
-            if(component.isEquipped(GiveMeHats.ELECTRIC_MOUSE_EARS_HAT_ITEM) && player.world.isRaining())
+            if(component.isEquipped(a->a.isOf(GiveMeHats.ELECTRIC_MOUSE_EARS_HAT_ITEM)) && player.getWorld().isRaining())
             {
-                LightningEntity lightningEntity = new LightningEntity(EntityType.LIGHTNING_BOLT,entity.world);
+                LightningEntity lightningEntity = new LightningEntity(EntityType.LIGHTNING_BOLT,entity.getWorld());
                 lightningEntity.teleport(entity.getX(),entity.getY(),entity.getZ());
                 entity.getEntityWorld().spawnEntity(lightningEntity);
             }
-            if(component.isEquipped(GiveMeHats.WOLF_EARS_ITEM))
+            if(component.isEquipped(a->a.isOf(GiveMeHats.WOLF_EARS_ITEM)))
             {
                 if(entity.getType()== EntityType.SHEEP)
                 {
@@ -67,23 +76,23 @@ public abstract class AttackMixin {
                     sheepEntity.sheared(SoundCategory.PLAYERS);
                 }
             }
-            if(component.isEquipped(GiveMeHats.HIPPIE_VIBES_ITEM))
+            if(component.isEquipped(a->a.isOf(GiveMeHats.HIPPIE_VIBES_ITEM)))
             {
                 if(entity.getType()== EntityType.SHEEP)
                 {
                     SheepEntity sheepEntity = (SheepEntity) entity;
-                    sheepEntity.setCustomName(new LiteralText("jeb_"));
+                    sheepEntity.setCustomName(Text.of("jeb_"));
                 }
             }
-            if(component.isEquipped(GiveMeHats.HALO_ITEM))
+            if(component.isEquipped(a->a.isOf(GiveMeHats.HALO_ITEM)))
             {
                 if(entity.getGroup().equals(EntityGroup.UNDEAD))
                 {
 
-                    entity.damage(DamageSource.player(player),4);
+                    entity.damage(entity.getDamageSources().mobAttack(entity),4);
                 }
             }
-            if(component.isEquipped(GiveMeHats.WITCH_HAT_ITEM))
+            if(component.isEquipped(a->a.isOf(GiveMeHats.WITCH_HAT_ITEM)))
             {
                 if(RandomUtils.nextInt(0,5)==0)
                 {
