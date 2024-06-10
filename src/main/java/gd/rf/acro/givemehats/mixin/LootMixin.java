@@ -53,7 +53,7 @@ public abstract class LootMixin extends LockableContainerBlockEntity {
             Random random;
             if (player == null)
             {
-                random = new Random(this.lootTableSeed);
+                Random random = Random.create(this.lootTableSeed);
             } else {
                 random = player.getRandom();
             }
