@@ -1,38 +1,34 @@
 {
-  "schemaVersion": 1,
-  "id": "givemehats",
-  "version": "${version}",
-
-  "name": "Give Me Hats!",
-  "description": "A hat mod for fabric",
-  "authors": [
-    "Acro"
-  ],
-  "contact": {
-    "homepage": "http://acro.rf.gd",
-    "sources": "https://github.com/JSJBDEV/GiveMeHats"
-  },
-
-  "license": "MIT",
-  "icon": "assets/givemehats/icon.jpg",
-
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "gd.rf.acro.givemehats.GiveMeHats"
-    ]
-  },
-  "mixins": [
-    "gmh.mixins.json"
-  ],
-
-  "depends": {
-    "fabricloader": ">=0.13.3",
-    "fabric": "*",
-    "minecraft": "~1.18.2",
-    "java": ">=17"
-  },
-  "suggests": {
-    "flamingo": "*"
-  }
+	"schemaVersion": 1,
+	"id": "givemehats",
+	"version": "${version}",
+	"name": "GiveMehats",
+	"description": "Hats with effects!",
+	"authors": [
+		"Acrogenous"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/givemehats/icon.jpg",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"gd.rf.acro.givemehats.GiveMeHats"
+		]
+	},
+	"mixins": [
+		"givemehats.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.7",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
 }

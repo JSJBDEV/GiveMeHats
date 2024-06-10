@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "gd.rf.acro.givemehats.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"AttackMixin",
+		"LootMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

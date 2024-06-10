@@ -15,9 +15,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -27,13 +28,12 @@ public class BunnyEarsItem extends TrinketItem implements TrinketRenderer {
 
     public BunnyEarsItem(Settings settings) {
         super(settings);
-        
     }
 
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.bunny_ears"));
+       tooltip.add(Text.translatable("text.bunny_ears"));
     }
 
 
@@ -47,12 +47,13 @@ public class BunnyEarsItem extends TrinketItem implements TrinketRenderer {
         }
     }
 
+
     @Override
-    public void render(ItemStack stack, SlotReference slotReference, EntityModel<? extends LivingEntity> contextModel, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+    public void render(ItemStack stack, SlotReference slotReference, net.minecraft.client.render.entity.model.EntityModel<? extends LivingEntity> contextModel, MatrixStack matrixStack, net.minecraft.client.render.VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
         GiveMeHats.translateToFace(matrixStack,contextModel,entity,headYaw,headPitch);
         matrixStack.scale(-1f,-1f,1f);
         matrixStack.translate(0,0.7,0.3f);
-        itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED,light, OverlayTexture.DEFAULT_UV,matrixStack,vertexConsumers,0);
+        itemRenderer.renderItem(entity,stack,ModelTransformationMode.FIXED,false,matrixStack,vertexConsumers,entity.getWorld(),light,OverlayTexture.DEFAULT_UV,0);
     }
 }
